@@ -13,6 +13,6 @@ Here we see the expression of a known AFD cell marker, ttx-1 by aggregate counts
 We have recently [shown](https://github.com/cengenproject/Thresholding_sc) that using the %non-zero cells to estimate gene expression provides much more accurate results than any counts based representations.
 
 ![Precision-recall](https://github.com/alecbarrett/Prop2Count/blob/main/img/precision_recall.png)
-### Figure 2
+### Figure 2: #### impulse
 Here we see that thresholding on the %non-zero cells gives higher accuracy for gene expression detection, using a ground truth set of 160 genes with known expression patterns in C. elegans neurons.
 
