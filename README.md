@@ -17,6 +17,6 @@ We have recently [shown](https://github.com/cengenproject/Thresholding_sc) that 
 
 
 
-![logit model](https://github.com/alecbarrett/Prop2Count/blob/main/img/SIA%20plot%20010823.pdf)
+![logit model](https://github.com/alecbarrett/Prop2Count/blob/main/img/SIA%20plot%20010823.png)
 ### Figure 3: modeling the %non-zero cells against the ln(counts) in a single replicate using a logit function
 ### ln(counts) = ln(p/1-p) + ln(nCells)
