@@ -2,7 +2,7 @@
 A parameter-free model for denoising single cell aggregated counts (pseudobulk) using the proportion of non-zero cells per gene
 
 
-Two easy ways to represent a gene's expression in single cell data are:
+#### Two easy ways to represent a gene's expression in single cell data are:
 1. Look at the total number of reads that map to the gene in a cluster (counts)
 2. Quantify the number of cells that have any reads mapping to the gene (%non-zero cells)
 
