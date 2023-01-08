@@ -34,4 +34,19 @@ From this graph, we see two things
 1. Take the %non-zero cells for each pseudobulk replicate in the single cell dataset, and calculate the %non-zero cells, and the total number of cells.
 2. Calculate the equivalent counts estimate as counts = (P/(1-P)) * nCells
 
-This simple 
+This simple transformation allows us to quickly obtain a denoised count value for each gene x replicate, which is then usable in most tools for differential expression analysis.
+
+## Improvements in differential expression accuracy
+
+![prop2count Differential Expression](https://github.com/alecbarrett/Prop2Count/blob/main/img/prop2count%20dex.png)
+### Figure 4: prop2count improves differential expression accuracy by reducing false positives.
+
+Here we show a boxplot of the true positive rate (TPR), false positive rate (FPR) and Matthew's correlation coefficient (MCC) for differential expression of ground truth genes between different neurons in C. elegans. Each data point is the directional score for a neuron-pair (example: AFD vs ADL, and ADL vs AFD are each a datapoint).
+
+p-values were obtained using a Wilcoxon Rank-Sum test.
+
+By comparing the accuracy of differential expression calling using three metrics, we see that prop2counts transformed data are approximately as good as the counts data in detecting expected events, but have a 45% drop in the median false positive rate, and a corresponding increase in the overal correspondance as shown by the MCC score.
+
+## Takeaway
+
+prop2count is a simple, fast, parameter-free model that allows users to obtain denoised counts for pseudobulk single cell RNA-seq datasets, improving both gene detection, and differential expression accuracy.
