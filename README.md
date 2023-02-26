@@ -50,3 +50,7 @@ By comparing the accuracy of differential expression calling using three metrics
 ## Takeaway
 
 prop2count is a simple, fast, parameter-free model that allows users to obtain denoised counts for pseudobulk single cell RNA-seq datasets, improving both gene detection, and differential expression accuracy.
+
+# Install
+
+devtools::install_git('https://github.com/alecbarrett/Prop2Count')
