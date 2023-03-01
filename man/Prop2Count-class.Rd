@@ -4,10 +4,8 @@
 \name{Prop2Count-class}
 \alias{Prop2Count-class}
 \alias{Prop2Count}
-\title{# Class definitions
-The Prop2Count Class}
+\title{The Prop2Count Class}
 \description{
-# Class definitions
 The Prop2Count Class
 }
 \section{Slots}{
