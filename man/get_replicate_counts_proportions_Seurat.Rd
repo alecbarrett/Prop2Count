@@ -23,9 +23,9 @@ get_replicate_counts_proportions_Seurat(
 \value{
 A list containing the following items:
 \itemize{
-   \item \code{counts}: the total counts per replicate in each gene
-   \item \code{proportions}: the proportion of cells in the replicate with >0 counts in each gene
-   \item \code{nCells}: the total cells in the replicate
+\item \code{counts}: the total counts per replicate in each gene
+\item \code{proportions}: the proportion of cells in the replicate with >0 counts in each gene
+\item \code{nCells}: the total cells in the replicate
 }
 }
 \description{

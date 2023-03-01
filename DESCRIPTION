@@ -1,10 +1,11 @@
 Package: Prop2CountR
 Type: Package
-Title: Transforms single cell RNA-seq proportions to counts
-Version: 0.1.0
+Title: single cell RNA-seq package for denoised pseudobulk counts
+Version: 0.1.1
 Author: Alec Barrett
 Maintainer: Alec Barrett <alec.barrett@yale.edu>
-Description: 
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -12,4 +13,6 @@ RoxygenNote: 7.2.0
 Imports: 
     Matrix,
     methods,
+    stringr,
     tidyr
+Roxygen: list(markdown = TRUE)

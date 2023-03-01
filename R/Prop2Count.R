@@ -1,4 +1,3 @@
-#'# Class definitions
 
 #' The Prop2Count Class
 #'

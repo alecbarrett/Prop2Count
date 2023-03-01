@@ -7,7 +7,7 @@
 prevent_infinite(proportions_matrix, nCell_vector)
 }
 \arguments{
-\item{proportions_matrix}{a genes x replicates matrix of proportions [0,1].}
+\item{proportions_matrix}{a genes x replicates matrix of proportions from 0,1.}
 
 \item{nCell_vector}{a named vector with integers showing the number of cells in each replicate.}
 }

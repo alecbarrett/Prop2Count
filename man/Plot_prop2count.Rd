@@ -7,14 +7,14 @@
 Plot_prop2count(Prop2Count_object, replicate = "highest", model = "logit")
 }
 \arguments{
-\item{Prop2Count_object}{a genes x replicates matrix of proportions [0,1].}
+\item{Prop2Count_object}{a genes x replicates matrix of proportions from 0,1.}
 
 \item{replicate}{Either 'highest' or 'random' which will select a single replicate to plot. 'highest' returns the replicate with the most cells, and 'random' returns a random replicate}
 
 \item{model}{a character string indicating which transformation model to use. Current options are 'logit' and 'poisson'}
 }
 \value{
-a matrix of values [0,infinity] to be used as counts for downstream applications
+a matrix of values from 0,infinity to be used as counts for downstream applications
 }
 \description{
 plot the relationship between proportions and log-counts in the original dataset

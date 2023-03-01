@@ -1,6 +1,43 @@
-### plot and fit
 
-library(tidyr)
+
+#' Checks for instances where proportions == 1, and moves the value down to prevent infinite counts
+#'
+#' @param proportions_matrix a genes x replicates matrix of proportions from 0,1.
+#' @param nCell_vector a named vector with integers showing the number of cells in each replicate.
+#'
+#' @return A matrix of proportions with all proportions less than 1, modified proportions will be returned as nCells-1/nCells
+#'
+#' @export
+#'
+prevent_infinite <- function(proportions_matrix, nCell_vector){
+
+  if(0 %in% nCell_vector){
+    stop('Cannot use an input where the number of cells in a replicate is 0')
+  }
+  if(NA %in% nCell_vector){
+    stop('NAs found in nCell vector')
+  }
+
+  new_prop <- sapply(colnames(proportions_matrix), function(x){
+
+    prop <- proportions_matrix[,x, drop = F]
+
+    nCell <- nCell_vector[x]
+    nCell_minus_1 <- nCell -1
+
+    max_prop <- nCell_minus_1/nCell
+
+    prop[prop==1] <- max_prop
+
+    return(prop)
+
+  })
+
+  rownames(new_prop) <- rownames(proportions_matrix)
+
+  return(new_prop)
+
+}
 
 #' Collect aggregated data from Seurat Object, an internal function in Prop2Count
 #'
@@ -11,9 +48,9 @@ library(tidyr)
 #'
 #' @return A list containing the following items:
 #' \itemize{
-#'    \item \code{counts}: the total counts per replicate in each gene
-#'    \item \code{proportions}: the proportion of cells in the replicate with >0 counts in each gene
-#'    \item \code{nCells}: the total cells in the replicate
+#'    \item `counts`: the total counts per replicate in each gene
+#'    \item `proportions`: the proportion of cells in the replicate with >0 counts in each gene
+#'    \item `nCells`: the total cells in the replicate
 #' }
 #'
 #' @export
@@ -51,50 +88,14 @@ get_replicate_counts_proportions_Seurat <- function(Seurat_object, idents, min_c
 }
 
 
-#' Checks for instances where proportions == 1, and moves the value down to prevent infinite counts
-#'
-#' @param proportions_matrix a genes x replicates matrix of proportions [0,1].
-#' @param nCell_vector a named vector with integers showing the number of cells in each replicate.
-#'
-#' @return A matrix of proportions with all proportions less than 1, modified proportions will be returned as nCells-1/nCells
-#'
-prevent_infinite <- function(proportions_matrix, nCell_vector){
-
-  if(0 %in% nCell_vector){
-    stop('Cannot use an input where the number of cells in a replicate is 0')
-  }
-  if(NA %in% nCell_vector){
-    stop('NAs found in nCell vector')
-  }
-
-  new_prop <- sapply(colnames(proportions_matrix), function(x){
-
-    prop <- proportions_matrix[,x, drop = F]
-
-    nCell <- nCell_vector[x]
-    nCell_minus_1 <- nCell -1
-
-    max_prop <- nCell_minus_1/nCell
-
-    prop[prop==1] <- max_prop
-
-    return(prop)
-
-  })
-
-  rownames(new_prop) <- rownames(proportions_matrix)
-
-  return(new_prop)
-
-}
 
 #' Converts proportions to a counts-like space
 #'
-#' @param proportions_matrix a genes x replicates matrix of proportions [0,1].
+#' @param proportions_matrix a genes x replicates matrix of proportions from 0,1.
 #' @param nCell_vector a named vector with integers showing the number of cells in each replicate.
 #' @param round a boolean value indicating whether or not to round the output down to an integer value
-#'
-#' @return a matrix of values [0,infinity] to be used as counts for downstream applications
+#' @export
+#' @return a matrix of values from 0,infinity to be used as counts for downstream applications
 prop2count <- function(proportions_matrix, nCell_vector, round = FALSE){
 
   if(ncol(proportions_matrix) != length(nCell_vector)){
@@ -124,11 +125,11 @@ prop2count <- function(proportions_matrix, nCell_vector, round = FALSE){
 
 #' plot the relationship between proportions and log-counts in the original dataset
 #'
-#' @param Prop2Count_object a genes x replicates matrix of proportions [0,1].
+#' @param Prop2Count_object a genes x replicates matrix of proportions from 0,1.
 #' @param replicate Either 'highest' or 'random' which will select a single replicate to plot. 'highest' returns the replicate with the most cells, and 'random' returns a random replicate
 #' @param model a character string indicating which transformation model to use. Current options are 'logit' and 'poisson'
-#'
-#' @return a matrix of values [0,infinity] to be used as counts for downstream applications
+#' @export
+#' @return a matrix of values from 0,infinity to be used as counts for downstream applications
 Plot_prop2count <- function(Prop2Count_object, replicate = 'highest', model = 'logit'){
 
   counts <- Prop2Count_object@aggregated_counts
