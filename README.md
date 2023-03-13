@@ -32,7 +32,7 @@ From this graph, we see two things
 ## The Transformation
 
 1. Calculate the %non-zero cells for each pseudobulk replicate in the single cell dataset, and the total number of cells in the replicate.
-2. Calculate the equivalent counts estimate as counts = (P/(1-P)) * nCells
+2. Calculate the equivalent counts estimate as: counts = (P/(1-P)) * nCells
 
 This simple transformation allows us to quickly obtain a denoised count value for each gene x replicate, which is then usable in most tools for differential expression analysis.
 
