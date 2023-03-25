@@ -65,7 +65,7 @@ prevent_infinite <- function(proportions_matrix, nCell_vector){
 get_replicate_counts_proportions_Seurat <- function(Seurat_object, idents, min_cells = 10, sep = '__'){
   if(length(idents > 1)){
     ident <- paste(idents, sep = sep)
-    Seurat_object@meta.data <- tidyr::unite(Seurat_object@meta.data, ident, idents, sep = '__')
+    Seurat_object@meta.data <- tidyr::unite(Seurat_object@meta.data, ident, idents, sep = sep)
   }else{ident <- idents}
 
   nCells <- Seurat_object$ident |> table()
