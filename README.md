@@ -10,7 +10,7 @@ A parameter-free model for denoising single cell aggregated counts (pseudobulk) 
 ### Figure 1: Expression of the gene ttx-1 in AFD neurons using aggregate counts, and %non-zero cells
 
 
-We have recently [shown](https://github.com/cengenproject/Thresholding_sc) that using the %non-zero cells to estimate gene expression provides much more accurate results than any counts based representations.
+We have recently [shown](https://github.com/cengenproject/Thresholding_sc) that using the %non-zero cells to estimate gene expression generally provides more accurate results than counts based representations.
 
 ![Precision-recall](https://github.com/alecbarrett/Prop2Count/blob/main/img/precision_recall.png)
 ### Figure 2: Precision-Recall Curve, gene detection across thresholds for known ground truth genes. 
