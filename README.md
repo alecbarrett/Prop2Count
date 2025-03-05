@@ -34,6 +34,17 @@ From this graph, we see two things
     * This allows us to easily move between counts and proportions spaces without the need for modeling dataset specific parameters
 
 
+## Modeling the general relationship
+
+Using a synthetic data approach, we can model the behavior of single cells across a range of expression values, and the corresponding "detection rate" that we observe in each synthetic cluster.
+
+Plotting the log counts against the logit of the detection rate plus the log of the total cells in the cluster, we can see a direct linear relationship (with strong increase in variance as the mean increases)
+
+<img width="1082" alt="Screenshot 2025-03-04 at 9 01 32 PM" src="https://github.com/user-attachments/assets/194b33ca-6a62-4c02-b1c0-329c8e0653f2" />
+
+Contrasting the Real and synthetic datasets you can again see that there is a clear deviation at low detection rates with some genes showing high counts, suggesting technical noise, rare bursts of expression (potentially quite interesting) or, most likely, contamination due to imperfect clustering and doublet removal.
+
+
 
 ## The Transformation
 
@@ -59,4 +70,4 @@ prop2count is a simple, fast, parameter-free model that allows users to obtain d
 
 # Install
 
-devtools::install_git('https://github.com/alecbarrett/Prop2Count')
+`devtools::install_git('https://github.com/alecbarrett/Prop2Count')`
