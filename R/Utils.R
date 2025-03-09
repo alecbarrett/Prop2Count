@@ -53,38 +53,65 @@ prevent_infinite <- function(proportions_matrix, nCell_vector){
 #'    \item `nCells`: the total cells in the replicate
 #' }
 #'
+#' @importFrom stats median
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #'    L4_CeNGEN_data <- Data(L4_CeNGEN_data)
-#'    example_list <- get_replicate_counts_proportions_Seurat(L4_CeNGEN_data, c('Cell.type', 'Experiment'))
+#'    example_list <- get_replicate_counts_proportions_Seurat(L4_CeNGEN_data, c('Cell.type',
+#'                                                            'Experiment'))
 #' }
 
 
-get_replicate_counts_proportions_Seurat <- function(Seurat_object, idents, min_cells = 10, sep = '__'){
-  if(length(idents > 1)){
-    ident <- paste(idents, sep = sep)
-    Seurat_object@meta.data <- tidyr::unite(Seurat_object@meta.data, ident, idents, sep = sep)
-  }else{ident <- idents}
+get_replicate_counts_proportions_Seurat <- function(Seurat_object,
+                                                    idents,
+                                                    min_cells = 10,
+                                                    sep = '__'){
 
-  nCells <- Seurat_object$ident |> table()
-  nCells <- nCells[nCells >=10]
+  metadata <- Seurat_object@meta.data
+  if(length(idents) > 1){
+    ident <- apply(metadata[,idents], 1, paste, collapse = sep)
+    metadata_unique <- metadata[,idents] |> unique()
+    rownames(metadata_unique) <- ident |> unique()
+  }else{
+    ident <- metadata[[ident]]
+    metadata_unique <- metadata[, ident, drop = F]|> unique()
+    rownames(metadata_unique) <- ident |> unique()
+    }
+
+  nCells <- ident |> table()
+  nCells <- nCells[nCells >= min_cells]
   replicates <- names(nCells) |> sort()
   nCells <- nCells[replicates]
-
+  metadata_unique <- metadata_unique[replicates,]
 
   counts <- sapply(replicates, function(x){
-    Matrix::rowSums(Seurat_object@assays$RNA@counts[,Seurat_object$ident == x])
+    Matrix::rowSums(Seurat_object@assays$RNA@counts[,ident == x])
   })
 
 
   proportions <- sapply(replicates, function(x){
-    Matrix::rowSums(Seurat_object@assays$RNA@counts[,Seurat_object$ident == x] > 0)/nCells[x]
+    Matrix::rowSums(Seurat_object@assays$RNA@counts[,ident == x] > 0)/nCells[x]
   })
 
-  return(list('counts' = counts, 'proportions' = proportions, 'nCells' = nCells))
+  metadata_unique$nCells <- nCells
 
+  ret_list <- list('counts' = counts,
+                   'proportions' = proportions,
+                   'nCells' = nCells,
+                   'replicate.data' =  metadata_unique,
+                   'meta.data' = list(total_cells = sum(nCells),
+                                      median_cells_per_replicate = median(nCells),
+                                      total_replicates = ncol(proportions),
+                                      min_cells_threshold = min_cells,
+                                      original_name = deparse(substitute(Seurat_object)),
+                                      orig_object_type = 'Seurat',
+                                      object_package_version = Seurat_object@version
+                                      )
+                   )
+
+  return(ret_list)
 }
 
 
@@ -128,6 +155,8 @@ prop2count <- function(proportions_matrix, nCell_vector, round = FALSE){
 #' @param Prop2Count_object a genes x replicates matrix of proportions from 0,1.
 #' @param replicate Either 'highest' or 'random' which will select a single replicate to plot. 'highest' returns the replicate with the most cells, and 'random' returns a random replicate
 #' @param model a character string indicating which transformation model to use. Current options are 'logit' and 'poisson'
+#'
+#' @importFrom graphics plot lines
 #' @export
 #' @return a matrix of values from 0,infinity to be used as counts for downstream applications
 Plot_prop2count <- function(Prop2Count_object, replicate = 'highest', model = 'logit'){

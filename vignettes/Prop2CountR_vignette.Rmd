@@ -1,0 +1,52 @@
+---
+title: "Prop2Count Vignette"
+author: "Alec Barrett"
+date: "2025-03-08"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Prop2Count Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load Libraries
+
+```{r, echo=FALSE}
+### using Seurat V5
+library(Seurat)
+library(Prop2CountR)
+```
+
+# Load example seurat object
+
+```{r}
+seurat_ob <- readRDS(system.file('extdata', 'Vignette_Seurat_object_V5.rds', package = 'Prop2CountR'))
+```
+
+# Get Detection proportions for each cell type
+
+```{r}
+
+sc_p2c <- create_Prop2Count(seurat_ob, idents = c('Cell.type', 'Experiment'), sep = '__', min_cells = 10, round = TRUE)
+
+```
+
+# Check results
+
+```{r}
+
+sc_p2c@prop2count[1:10,1:5]
+
+```
+
+# plot an example replicate showing the relationship between proportions and counts
+
+```{r}
+
+Plot_prop2count(sc_p2c)
+
+```

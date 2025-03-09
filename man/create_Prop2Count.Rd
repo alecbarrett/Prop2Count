@@ -2,33 +2,24 @@
 % Please edit documentation in R/Prop2Count.R
 \name{create_Prop2Count}
 \alias{create_Prop2Count}
-\title{Collect aggregated data from Seurat Object, an internal function in Prop2Count}
+\title{Create a Prop2Count object from a Seurat object}
 \usage{
-create_Prop2Count(
-  object,
-  idents,
-  sep = "__",
-  min_cells = 10,
-  round = FALSE,
-  keep_counts = TRUE
-)
+create_Prop2Count(object, idents, sep = "__", min_cells = 10, round = FALSE)
 }
 \arguments{
-\item{object}{A Seurat object.}
+\item{object}{A Seurat object}
 
-\item{idents}{The colname(s) in the metadata to use as identifiers for aggregation & calculating proportions, what I call replicates here}
+\item{idents}{The colname(s) in the metadata to use as identifiers for aggregation & calculating proportions}
 
-\item{sep}{A character to separate the ident names, if there's more than one metadata column being used. Pick a pretty unique thing that's easy to separate on later}
+\item{sep}{A character to separate the ident names, if there's more than one metadata column being used}
 
-\item{min_cells}{A number, the minimum number of barcodes in a unique replicate (see idents) that will be aggregated, fewer than this number will be excluded from the data}
+\item{min_cells}{A number, the minimum number of barcodes in a unique replicate (see idents) that will be aggregated}
 
-\item{round}{A boolean value, indicating whether or not to round the transformed proportions output down to an integer. Default = FALSE}
-
-\item{keep_counts}{A boolean value, indicating whether to keep the oriignal aggregated counts matrix. Default = TRUE}
+\item{round}{A boolean value, indicating whether or not to round the transformed proportions output down to an integer}
 }
 \value{
-a Prop2Count object with transformed counts
+A Prop2Count object with transformed counts
 }
 \description{
-Collect aggregated data from Seurat Object, an internal function in Prop2Count
+Create a Prop2Count object from a Seurat object
 }

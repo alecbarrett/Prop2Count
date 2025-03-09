@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.RData$
+^\.Ruserdata$
+^README\.Rmd$
+^README\.md$
+^img/*$
+^doc$
+^Meta$

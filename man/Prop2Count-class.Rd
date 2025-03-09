@@ -18,5 +18,9 @@ The Prop2Count Class
 \item{\code{nCells}}{vector of the number of cells per replicate}
 
 \item{\code{prop2count}}{genes x replicates matrix of transformed proportions as doubles, or integers (if round == T)}
+
+\item{\code{replicate.data}}{replicates x features data.frame with replicate level descriptions (original identifiers, total counts, etc...)}
+
+\item{\code{meta.data}}{replicates x features data.frame with replicate level descriptions (original identifiers, total counts, etc...)}
 }}
 

@@ -34,6 +34,7 @@ Collect aggregated data from Seurat Object, an internal function in Prop2Count
 \examples{
 \dontrun{
    L4_CeNGEN_data <- Data(L4_CeNGEN_data)
-   example_list <- get_replicate_counts_proportions_Seurat(L4_CeNGEN_data, c('Cell.type', 'Experiment'))
+   example_list <- get_replicate_counts_proportions_Seurat(L4_CeNGEN_data, c('Cell.type',
+                                                           'Experiment'))
 }
 }
