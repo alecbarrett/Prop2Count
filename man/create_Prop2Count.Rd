@@ -2,12 +2,12 @@
 % Please edit documentation in R/Prop2Count.R
 \name{create_Prop2Count}
 \alias{create_Prop2Count}
-\title{Create a Prop2Count object from a Seurat object}
+\title{Create a Prop2Count object}
 \usage{
 create_Prop2Count(object, idents, sep = "__", min_cells = 10, round = FALSE)
 }
 \arguments{
-\item{object}{A Seurat object}
+\item{object}{A Seurat or Single Cell Experiment object}
 
 \item{idents}{The colname(s) in the metadata to use as identifiers for aggregation & calculating proportions}
 
@@ -21,5 +21,5 @@ create_Prop2Count(object, idents, sep = "__", min_cells = 10, round = FALSE)
 A Prop2Count object with transformed counts
 }
 \description{
-Create a Prop2Count object from a Seurat object
+Create a Prop2Count object
 }

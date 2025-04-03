@@ -46,9 +46,9 @@ setMethod(
   }
 )
 
-#' Create a Prop2Count object from a Seurat object
+#' Create a Prop2Count object
 #'
-#' @param object A Seurat object
+#' @param object A Seurat or Single Cell Experiment object
 #' @param idents The colname(s) in the metadata to use as identifiers for aggregation & calculating proportions
 #' @param sep A character to separate the ident names, if there's more than one metadata column being used
 #' @param min_cells A number, the minimum number of barcodes in a unique replicate (see idents) that will be aggregated
@@ -61,16 +61,30 @@ create_Prop2Count <- function(object,
                               sep = '__',
                               min_cells = 10,
                               round = FALSE) {
-  if(!is(object, 'Seurat')) {
-    stop("Input object must be a Seurat object")
+  if(!is(object, 'Seurat') & !is(object, 'SingleCellExperiment')) {
+    stop("Input object must be a Seurat or Single Cell Experiment object")
   }
 
-  data_object <- get_replicate_counts_proportions_Seurat(
-    Seurat_object = object,
-    idents = idents,
-    min_cells = min_cells,
-    sep = sep  # Use the passed parameter
-  )
+  if(is(object, 'Seurat')){
+
+    data_object <- get_replicate_counts_proportions_Seurat(
+      object = object,
+      idents = idents,
+      min_cells = min_cells,
+      sep = sep
+    )
+  }
+
+  if(is(object, 'SingleCellExperiment')){
+
+    data_object <- get_replicate_counts_proportions_SCE(
+      object = object,
+      idents = idents,
+      min_cells = min_cells,
+      sep = sep
+    )
+  }
+
 
   prop2count_ <- prop2count(
     proportions_matrix = data_object$proportions,
@@ -90,3 +104,9 @@ create_Prop2Count <- function(object,
 
   return(result)
 }
+
+
+
+
+
+
