@@ -8,12 +8,23 @@
 #' @return a matrix of values from 0,infinity to be used as counts for downstream applications
 prop2count <- function(proportions_matrix, nCell_vector, round = FALSE){
 
+  if(any(is.na(proportions_matrix))){
+    stop('NAs in proportions matrix')
+  }
+  if(any(is.na(nCell_vector))){
+    stop('NAs in nCell vector')
+  }
+
   if(ncol(proportions_matrix) != length(nCell_vector)){
     stop('The number of entries in the nCell vector, and the number of samples in the proportions matrix, do not match up')
   }
   if(sum(proportions_matrix > 1) > 0 | sum(proportions_matrix < 0) > 0){
     stop('proportions input needs to be in the range of 0 and 1')
   }
+  if(any(nCell_vector == 0)){
+    stop('nCell_vector should not contain any zeros')
+  }
+
   if(sum(proportions_matrix==1) > 0 ){
     proportions_matrix <- prevent_infinite(proportions_matrix, nCell_vector)
   }

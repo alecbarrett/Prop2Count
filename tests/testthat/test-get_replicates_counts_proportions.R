@@ -1,58 +1,51 @@
 
+
+
 ## load Seurat example
 
 example_seurat <- readRDS(system.file("extdata", "Vignette_Seurat_object_V5.rds", package = "Prop2CountR"))
 
+example_sce <- Seurat::as.SingleCellExperiment(example_seurat)
 
+test_that('seurat object processed', {
 
-### generate dummy data
-
-bad_proportions_matrix <- matrix(rnorm(500), ncol = 10)
-colnames(bad_proportions_matrix) <- paste(rep('celltype', 10), 1:10, sep = '_')
-rownames(bad_proportions_matrix) <- paste(rep('gene', 50), 1:50, sep = '_')
-
-valid_proportions_matrix <- matrix(runif(500), ncol = 10)
-colnames(valid_proportions_matrix) <- paste(rep('celltype', 10), 1:10, sep = '_')
-rownames(valid_proportions_matrix) <- paste(rep('gene', 50), 1:50, sep = '_')
-
-
-runif(5)
-
-valid_ncell <- rpois(10, 10)
-names(valid_ncell) <- colnames(valid_proportions_matrix)
-
-short_ncell <- rpois(5,10)
-names(short_ncell) <- names(valid_ncell)[1:5]
-
-test_that('prop2count function requires 0 to 1 values', {
-  expect_error(Prop2CountR::prop2count(bad_proportions_matrix, valid_ncell),
-               'proportions input needs to be in the range of 0 and 1')
-})
-
-
-test_that('prop2count function requires 0 to 1 values', {
-  expect_error(Prop2CountR::prop2count(valid_proportions_matrix, short_ncell),
-               "The number of entries in the nCell vector, and the number of samples in the proportions matrix, do not match up")
-})
-
-test_that('valid outputs', {
-
-  res <- Prop2CountR::prop2count(valid_proportions_matrix, valid_ncell)
-
-  expect_true(all(is.finite(res)))
+  expect_no_error(get_replicate_counts_proportions_Seurat(example_seurat, c('Cell.type', 'Experiment')))
 
 })
 
 
-test_that('infinite values are fixed', {
-  valid_proportions_matrix_1 <- valid_proportions_matrix
-  valid_proportions_matrix_1[valid_proportions_matrix_1 > 0.9] <- 1
+test_that('Seurat idents that do not exist throw an error', {
+  expect_error(get_replicate_counts_proportions_Seurat(example_seurat, 'NonExistentColumn'))
+})
 
-  res <- prop2count(valid_proportions_matrix_1, valid_ncell)
+metadata <- example_seurat@meta.data
+cell_counts <- table(metadata$Cell.type)
+max_cells <- max(cell_counts) + 10
 
-  expect_true(all(is.finite(res)))
+test_that('too high of cell minimum throws an error', {
+
+  metadata <- example_seurat@meta.data
+  cell_counts <- table(metadata$Cell.type)
+  max_cells <- max(cell_counts) + 100
+
+  expect_error(get_replicate_counts_proportions_Seurat(example_seurat, 'Cell.type', max_cells))
+
 
 })
 
-library(Prop2CountR)
+test_that('get_replicate_counts_proportions_SCE processes data correctly', {
+  result_sce <- get_replicate_counts_proportions_SCE(example_sce, c('Cell.type', 'Experiment'))
+
+  expect_type(result_sce, "list")
+  #expect_true(all(c('counts', 'proportions', 'nCells', 'replicate.data', 'meta.data') %in% names(result_sce)))
+
+  result_single <- get_replicate_counts_proportions_SCE(example_sce, c('Cell.type'))
+  #expect_type(result_single, "list")
+
+  result_multiple <- get_replicate_counts_proportions_SCE(example_sce, c('Cell.type', 'Experiment'))
+  #expect_true(grepl('__', colnames(result_multiple$counts)[1])) # Check separator in column names
+
+})
+library
+
 

@@ -47,11 +47,13 @@ get_replicate_counts_proportions_Seurat <- function(object,
     ret <- get_replicate_counts_proportions_Seurat_V5(
       object,
       idents,
-      min_cells = 10,
+      min_cells = min_cells,
       sep = '__'
     )
 
   }
+
+  ret
 
   }
 
@@ -85,22 +87,38 @@ get_replicate_counts_proportions_Seurat_V5 <- function(object,
                                                     min_cells = 10,
                                                     sep = '__'){
 
+  if(!is(object, 'Seurat')){
+    stop('object must be type Seurat')
+  }
+  major_version <- strsplit(as.character(object@version), '\\.')[[1]][1]
+  if(major_version != "5"){
+    stop('this function expects a V5 Seurat object')
+  }
+
   metadata <- object@meta.data
+  if(!all(idents %in% colnames(metadata))){
+    stop('columns used for replicate names are not in meta data')
+  }
+
   if(length(idents) > 1){
     ident <- apply(metadata[,idents], 1, paste, collapse = sep)
     metadata_unique <- metadata[,idents] |> unique()
     rownames(metadata_unique) <- ident |> unique()
   }else{
-    ident <- metadata[[ident]]
-    metadata_unique <- metadata[, ident, drop = F]|> unique()
+    ident <- metadata[,idents]
+    metadata_unique <- metadata[, idents, drop = F]|> unique()
     rownames(metadata_unique) <- ident |> unique()
   }
 
   nCells <- ident |> table()
+  if(sum(nCells >= min_cells)==0){
+    stop('no replicates pass minimum cells threshold')
+  }
+
   nCells <- nCells[nCells >= min_cells]
   replicates <- names(nCells) |> sort()
   nCells <- nCells[replicates]
-  metadata_unique <- metadata_unique[replicates,]
+  metadata_unique <- as.data.frame(metadata_unique[replicates,])
 
   counts <- sapply(replicates, function(x){
     Matrix::rowSums(object@assays$RNA@counts[,ident == x])
@@ -111,7 +129,7 @@ get_replicate_counts_proportions_Seurat_V5 <- function(object,
     Matrix::rowSums(object@assays$RNA@counts[,ident == x] > 0)/nCells[x]
   })
 
-  metadata_unique$nCells <- nCells
+  metadata_unique$nCells <- nCells |> as.vector()
 
   ret_list <- list('counts' = counts,
                    'proportions' = proportions,
@@ -146,6 +164,8 @@ get_replicate_counts_proportions_Seurat_V5 <- function(object,
 #'
 #' @importFrom stats median
 #' @importFrom SummarizedExperiment colData
+#' @export
+
 
 get_replicate_counts_proportions_SCE <- function(object,
                                                        idents,
@@ -158,8 +178,8 @@ get_replicate_counts_proportions_SCE <- function(object,
     metadata_unique <- metadata[,idents] |> unique()
     rownames(metadata_unique) <- ident |> unique()
   }else{
-    ident <- metadata[[ident]]
-    metadata_unique <- metadata[, ident, drop = F]|> unique()
+    ident <- metadata[,idents]
+    metadata_unique <- metadata[, idents, drop = F]|> unique()
     rownames(metadata_unique) <- ident |> unique()
   }
 
@@ -167,18 +187,18 @@ get_replicate_counts_proportions_SCE <- function(object,
   nCells <- nCells[nCells >= min_cells]
   replicates <- names(nCells) |> sort()
   nCells <- nCells[replicates]
-  metadata_unique <- metadata_unique[replicates,]
+  metadata_unique <- as.data.frame(metadata_unique[replicates,])
 
   counts <- sapply(replicates, function(x){
-    Matrix::rowSums(counts(object)[,ident == x])
+    Matrix::rowSums(object@assays@data$counts[,ident == x])
   })
 
 
   proportions <- sapply(replicates, function(x){
-    Matrix::rowSums(counts(object)[,ident == x] > 0)/nCells[x]
+    Matrix::rowSums(object@assays@data$counts[,ident == x] > 0)/nCells[x]
   })
 
-  metadata_unique$nCells <- nCells
+  metadata_unique$nCells <- nCells |> as.vector()
 
   ret_list <- list('counts' = counts,
                    'proportions' = proportions,
